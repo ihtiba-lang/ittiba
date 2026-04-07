@@ -1,0 +1,137 @@
+import { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, RefreshControl, 
+ScrollView } from 'react-native';
+
+const API = 'https://YOUR_USERNAME-ittiba.hf.space';
+
+export default function HomeScreen() {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchNow = async () => {
+    try {
+      const res = await fetch(`${API}/now`);
+      const json = await res.json();
+      setData(json);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNow();
+    const interval = setInterval(fetchNow, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <ScrollView
+      style={styles.container}
+      refreshControl={<RefreshControl refreshing={refreshing} 
+onRefresh={() => { setRefreshing(true); fetchNow(); }} />}
+    >
+      <View style={styles.header}>
+        <Text style={styles.appName}>Ittiba</Text>
+        <Text style={styles.tagline}>Follow the recitation 
+live</Text>
+        <View style={styles.liveRow}>
+          <View style={styles.liveDot} />
+          <Text style={styles.liveText}>Makkah · Live</Text>
+        </View>
+      </View>
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#1D9E75" style={{ 
+marginTop: 40 }} />
+      ) : data?.prayer ? (
+        <View style={styles.card}>
+          <Text style={styles.prayerLabel}>{data.prayer}</Text>
+
+          {data.rakah_1?.surah_name && (
+            <View style={styles.rakahBlock}>
+              <Text style={styles.rakahTitle}>Rakah 1</Text>
+              <Text 
+style={styles.surahName}>{data.rakah_1.surah_name}</Text>
+              <Text style={styles.ayahRange}>
+                Ayahs {data.rakah_1.ayah_start} – 
+{data.rakah_1.ayah_end}
+              </Text>
+            </View>
+          )}
+
+          {data.rakah_2?.surah_name && (
+            <View style={styles.rakahBlock}>
+              <Text style={styles.rakahTitle}>Rakah 2</Text>
+              <Text 
+style={styles.surahName}>{data.rakah_2.surah_name}</Text>
+              <Text style={styles.ayahRange}>
+                Ayahs {data.rakah_2.ayah_start} – 
+{data.rakah_2.ayah_end}
+              </Text>
+            </View>
+          )}
+
+          <Text style={styles.timestamp}>
+            Last updated: {new 
+Date(data.timestamp).toLocaleTimeString()}
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.card}>
+          <Text style={styles.noData}>No prayer recitation detected 
+yet.</Text>
+          <Text style={styles.noDataSub}>Pull down to refresh or 
+check back at prayer time.</Text>
+        </View>
+      )}
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#f8f9fa' },
+  header: { backgroundColor: '#085041', padding: 32, paddingTop: 60 
+},
+  appName: { fontSize: 36, fontWeight: '600', color: '#fff', 
+letterSpacing: -0.5 },
+  tagline: { fontSize: 14, color: '#9FE1CB', marginTop: 4 },
+  liveRow: { flexDirection: 'row', alignItems: 'center', marginTop: 
+12, gap: 6 },
+  liveDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: 
+'#1D9E75' },
+  liveText: { fontSize: 13, color: '#9FE1CB' },
+  card: { margin: 16, backgroundColor: '#fff', borderRadius: 16, 
+padding: 20, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 
+8 },
+  prayerLabel: { fontSize: 13, fontWeight: '600', color: '#1D9E75', 
+textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 16 },
+  rakahBlock: { backgroundColor: '#E1F5EE', borderRadius: 12, 
+padding: 16, marginBottom: 12 },
+  rakahTitle: { fontSize: 12, color: '#0F6E56', fontWeight: '600', 
+marginBottom: 4 },
+  surahName: { fontSize: 20, fontWeight: '600', color: '#085041' },
+  ayahRange: { fontSize: 13, color: '#1D9E75', marginTop: 4 },
+  timestamp: { fontSize: 12, color: '#999', marginTop: 12, 
+textAlign: 'center' },
+  noData: { fontSize: 16, color: '#333', textAlign: 'center'import 
+{ Text, View } 
+from 
+"react-native";
+
+export default function Index() {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text>Edit app/index.tsx to edit this screen.</Text>
+    </View>
+  );
+}
