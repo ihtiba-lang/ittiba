@@ -53,6 +53,26 @@ function getHijriDate() {
   }
 }
 
+const ARABIC_DAYS = {
+  "Monday": "الاثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء",
+  "Thursday": "الخميس", "Friday": "الجمعة", "Saturday": "السبت", "Sunday": "الأحد"
+};
+
+const ARABIC_DAYS_TRANSLITERATED = {
+  "Monday": "Al-Ithnayn · الاثنين",
+  "Tuesday": "Al-Thulatha · الثلاثاء",
+  "Wednesday": "Al-Arbi'a · الأربعاء",
+  "Thursday": "Al-Khamees · الخميس",
+  "Friday": "Al-Jumu'ah · الجمعة",
+  "Saturday": "Al-Sabt · السبت",
+  "Sunday": "Al-Ahad · الأحد"
+};
+
+function getArabicDay() {
+  const day = new Date().toLocaleDateString("en-US", { timeZone: "Asia/Riyadh", weekday: "long" });
+  return ARABIC_DAYS_TRANSLITERATED[day] || day;
+}
+
 function getSaudiNow() {
   const now = new Date();
   const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
@@ -199,6 +219,7 @@ export default function HomeScreen() {
 
       <View style={styles.dateCard}>
         <Text style={styles.gregorianDate}>{getGregorianDate()}</Text>
+        <Text style={styles.arabicDay}>{getArabicDay()}</Text>
         <Text style={styles.hijriDate}>{getHijriDate()}</Text>
       </View>
 
@@ -278,6 +299,7 @@ const styles = StyleSheet.create({
   dateCard: { margin: 16, marginBottom: 8, backgroundColor: "#fff", borderRadius: 16, padding: 16, alignItems: "center" },
   gregorianDate: { fontSize: 14, fontWeight: "500", color: GREEN },
   hijriDate: { fontSize: 13, color: GOLD, marginTop: 4 },
+  arabicDay: { fontSize: 18, color: GREEN, marginTop: 4, fontWeight: "600" },
   timeCard: { flexDirection: "row", marginHorizontal: 16, marginBottom: 8, backgroundColor: "#fff", borderRadius: 16, padding: 20 },
   timeBlock: { flex: 1, alignItems: "center" },
   timeLabel: { fontSize: 12, color: "#999", marginBottom: 4 },
