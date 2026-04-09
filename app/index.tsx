@@ -237,10 +237,10 @@ export default function HomeScreen() {
 
       <View style={styles.tabRow}>
         <TouchableOpacity style={[styles.tab, selected === "makkah" && styles.tabActive]} onPress={() => setSelected("makkah")}>
-          <Text style={[styles.tabText, selected === "makkah" && styles.tabTextActive]}>Makkah</Text>
+          <Text style={[styles.tabText, selected === "makkah" && styles.tabTextActive]}>🕋 Makkah</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.tab, selected === "madinah" && styles.tabActive]} onPress={() => setSelected("madinah")}>
-          <Text style={[styles.tabText, selected === "madinah" && styles.tabTextActive]}>Madinah</Text>
+          <Text style={[styles.tabText, selected === "madinah" && styles.tabTextActive]}>🌿 Madinah</Text>
         </TouchableOpacity>
       </View>
 
@@ -326,14 +326,14 @@ const styles = StyleSheet.create({
   timestamp: { fontSize: 12, color: "#999", marginTop: 12, textAlign: "center" },
   noData: { fontSize: 16, color: "#333", textAlign: "center", marginBottom: 8 },
   noDataSub: { fontSize: 13, color: "#999", textAlign: "center" },
-  qiblaFloat: { position: "absolute", top: 52, right: 20, alignItems: "center", zIndex: 10 },
-  qiblaCompassSmall: { width: 48, height: 48, borderRadius: 24, borderWidth: 1.5, borderColor: "#C9A84C", alignItems: "center", justifyContent: "center" },
-  qiblaCompassAligned: { borderColor: "#1D9E75", backgroundColor: "rgba(29,158,117,0.15)" },
-  qiblaArrowSmall: { alignItems: "center", justifyContent: "center", width: 48, height: 48 },
-  arrowHead: { width: 0, height: 0, borderLeftWidth: 5, borderRightWidth: 5, borderBottomWidth: 10, borderLeftColor: "transparent", borderRightColor: "transparent", borderBottomColor: "#C9A84C" },
+  qiblaFloat: { position: "absolute", top: 62, right: 36, alignItems: "center", zIndex: 10 },
+  qiblaCompassSmall: { width: 60, height: 60, borderRadius: 30, borderWidth: 2.5, borderColor: "#C9A84C", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(201,168,76,0.1)" },
+  qiblaCompassAligned: { borderColor: "#1D9E75", backgroundColor: "rgba(29,158,117,0.2)" },
+  qiblaArrowSmall: { alignItems: "center", justifyContent: "center", width: 60, height: 60 },
+  arrowHead: { width: 0, height: 0, borderLeftWidth: 7, borderRightWidth: 7, borderBottomWidth: 14, borderLeftColor: "transparent", borderRightColor: "transparent", borderBottomColor: "#C9A84C" },
   arrowHeadAligned: { borderBottomColor: "#1D9E75" },
-  arrowBody: { width: 3, height: 12, backgroundColor: "#C9A84C", borderBottomLeftRadius: 2, borderBottomRightRadius: 2 },
+  arrowBody: { width: 4, height: 16, backgroundColor: "#C9A84C", borderBottomLeftRadius: 2, borderBottomRightRadius: 2 },
   arrowBodyAligned: { backgroundColor: "#1D9E75" },
-  qiblaFloatText: { fontSize: 10, color: "#C9A84C", marginTop: 4, fontWeight: "600" },
+  qiblaFloatText: { fontSize: 11, color: "#C9A84C", marginTop: 5, fontWeight: "700" },
   qiblaFloatTextAligned: { color: "#1D9E75" },
 });
