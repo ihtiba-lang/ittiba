@@ -1,0 +1,41 @@
+import requests
+import time
+
+API = "https://ittiba-ittiba.hf.space"
+
+print("Waiting for API to be ready...")
+for i in range(20):
+    try:
+        r = requests.get(API + "/now", timeout=5)
+        if r.status_code == 200:
+            print("API ready!")
+            break
+    except:
+        pass
+    time.sleep(15)
+    print(f"  Attempt {i+1}/20...")
+
+entries = [
+    {"mosque":"makkah","prayer":"Fajr","rakah":1,"surah_name":"Adh-Dhariyat","surah":51,"ayah_start":50,"ayah_end":56,"confidence":0.8,"timestamp":"2026-04-08T02:21:00.000000","date":"2026-04-08","gregorian_date":"Wednesday, 8 April 2026","arabic_date":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621\u060c 8 \u0623\u0628\u0631\u064a\u0644 2026","day":"Wednesday","arabic_day":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621"},
+    {"mosque":"makkah","prayer":"Fajr","rakah":2,"surah_name":"Al-Fajr","surah":89,"ayah_start":15,"ayah_end":23,"confidence":0.7,"timestamp":"2026-04-08T03:29:00.000000","date":"2026-04-08","gregorian_date":"Wednesday, 8 April 2026","arabic_date":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621\u060c 8 \u0623\u0628\u0631\u064a\u0644 2026","day":"Wednesday","arabic_day":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621"},
+    {"mosque":"madinah","prayer":"Fajr","rakah":1,"surah_name":"Al-Ikhlas","surah":112,"ayah_start":1,"ayah_end":4,"confidence":0.7,"timestamp":"2026-04-08T02:18:00.000000","date":"2026-04-08","gregorian_date":"Wednesday, 8 April 2026","arabic_date":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621\u060c 8 \u0623\u0628\u0631\u064a\u0644 2026","day":"Wednesday","arabic_day":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621"},
+    {"mosque":"makkah","prayer":"Maghrib","rakah":1,"surah_name":"An-Nisa","surah":4,"ayah_start":132,"ayah_end":132,"confidence":0.6,"timestamp":"2026-04-08T15:38:00.000000","date":"2026-04-08","gregorian_date":"Wednesday, 8 April 2026","arabic_date":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621\u060c 8 \u0623\u0628\u0631\u064a\u0644 2026","day":"Wednesday","arabic_day":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621"},
+    {"mosque":"madinah","prayer":"Maghrib","rakah":1,"surah_name":"Ya-Sin","surah":36,"ayah_start":35,"ayah_end":35,"confidence":0.6,"timestamp":"2026-04-08T15:40:00.000000","date":"2026-04-08","gregorian_date":"Wednesday, 8 April 2026","arabic_date":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621\u060c 8 \u0623\u0628\u0631\u064a\u0644 2026","day":"Wednesday","arabic_day":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621"},
+    {"mosque":"makkah","prayer":"Isha","rakah":1,"surah_name":"Maryam","surah":19,"ayah_start":78,"ayah_end":94,"confidence":0.9,"timestamp":"2026-04-08T17:18:00.000000","date":"2026-04-08","gregorian_date":"Wednesday, 8 April 2026","arabic_date":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621\u060c 8 \u0623\u0628\u0631\u064a\u0644 2026","day":"Wednesday","arabic_day":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621"},
+    {"mosque":"madinah","prayer":"Isha","rakah":1,"surah_name":"Qaf","surah":50,"ayah_start":16,"ayah_end":33,"confidence":0.9,"timestamp":"2026-04-08T17:20:00.000000","date":"2026-04-08","gregorian_date":"Wednesday, 8 April 2026","arabic_date":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621\u060c 8 \u0623\u0628\u0631\u064a\u0644 2026","day":"Wednesday","arabic_day":"\u0627\u0644\u0623\u0631\u0628\u0639\u0627\u0621"},
+    {"mosque":"madinah","prayer":"Fajr","rakah":1,"surah_name":"Al-Hujurat","surah":49,"ayah_start":1,"ayah_end":6,"confidence":0.76,"timestamp":"2026-04-09T02:02:00.000000","date":"2026-04-09","gregorian_date":"Thursday, 9 April 2026","arabic_date":"\u0627\u0644\u062e\u0645\u064a\u0633\u060c 9 \u0623\u0628\u0631\u064a\u0644 2026","day":"Thursday","arabic_day":"\u0627\u0644\u062e\u0645\u064a\u0633"},
+    {"mosque":"makkah","prayer":"Fajr","rakah":1,"surah_name":"Al-Munafiqun","surah":63,"ayah_start":1,"ayah_end":10,"confidence":0.76,"timestamp":"2026-04-09T02:05:00.000000","date":"2026-04-09","gregorian_date":"Thursday, 9 April 2026","arabic_date":"\u0627\u0644\u062e\u0645\u064a\u0633\u060c 9 \u0623\u0628\u0631\u064a\u0644 2026","day":"Thursday","arabic_day":"\u0627\u0644\u062e\u0645\u064a\u0633"},
+    {"mosque":"makkah","prayer":"Fajr","rakah":2,"surah_name":"Al-Munafiqun","surah":63,"ayah_start":7,"ayah_end":11,"confidence":0.76,"timestamp":"2026-04-09T02:12:00.000000","date":"2026-04-09","gregorian_date":"Thursday, 9 April 2026","arabic_date":"\u0627\u0644\u062e\u0645\u064a\u0633\u060c 9 \u0623\u0628\u0631\u064a\u0644 2026","day":"Thursday","arabic_day":"\u0627\u0644\u062e\u0645\u064a\u0633"},
+    {"mosque":"madinah","prayer":"Fajr","rakah":2,"surah_name":"Al-Hujurat","surah":49,"ayah_start":7,"ayah_end":12,"confidence":0.76,"timestamp":"2026-04-09T02:13:00.000000","date":"2026-04-09","gregorian_date":"Thursday, 9 April 2026","arabic_date":"\u0627\u0644\u062e\u0645\u064a\u0633\u060c 9 \u0623\u0628\u0631\u064a\u0644 2026","day":"Thursday","arabic_day":"\u0627\u0644\u062e\u0645\u064a\u0633"},
+    {"mosque":"makkah","prayer":"Fajr","rakah":1,"surah_name":"Ali 'Imran","surah":3,"ayah_start":130,"ayah_end":141,"confidence":0.9,"timestamp":"2026-04-10T02:04:00.000000","date":"2026-04-10","gregorian_date":"Friday, 10 April 2026","arabic_date":"\u0627\u0644\u062c\u0645\u0639\u0629\u060c 10 \u0623\u0628\u0631\u064a\u0644 2026","day":"Friday","arabic_day":"\u0627\u0644\u062c\u0645\u0639\u0629"},
+    {"mosque":"makkah","prayer":"Fajr","rakah":2,"surah_name":"Ali 'Imran","surah":3,"ayah_start":142,"ayah_end":148,"confidence":0.9,"timestamp":"2026-04-10T02:09:00.000000","date":"2026-04-10","gregorian_date":"Friday, 10 April 2026","arabic_date":"\u0627\u0644\u062c\u0645\u0639\u0629\u060c 10 \u0623\u0628\u0631\u064a\u0644 2026","day":"Friday","arabic_day":"\u0627\u0644\u062c\u0645\u0639\u0629"},
+    {"mosque":"madinah","prayer":"Fajr","rakah":1,"surah_name":"As-Sajdah","surah":32,"ayah_start":1,"ayah_end":15,"confidence":0.9,"timestamp":"2026-04-10T02:01:00.000000","date":"2026-04-10","gregorian_date":"Friday, 10 April 2026","arabic_date":"\u0627\u0644\u062c\u0645\u0639\u0629\u060c 10 \u0623\u0628\u0631\u064a\u0644 2026","day":"Friday","arabic_day":"\u0627\u0644\u062c\u0645\u0639\u0629"},
+    {"mosque":"madinah","prayer":"Fajr","rakah":2,"surah_name":"Al-Insan","surah":76,"ayah_start":1,"ayah_end":31,"confidence":0.9,"timestamp":"2026-04-10T02:11:00.000000","date":"2026-04-10","gregorian_date":"Friday, 10 April 2026","arabic_date":"\u0627\u0644\u062c\u0645\u0639\u0629\u060c 10 \u0623\u0628\u0631\u064a\u0644 2026","day":"Friday","arabic_day":"\u0627\u0644\u062c\u0645\u0639\u0629"},
+    {"mosque":"makkah","prayer":"Jumuah","rakah":1,"surah_name":"At-Takathur","surah":102,"ayah_start":1,"ayah_end":8,"confidence":0.95,"timestamp":"2026-04-10T09:44:00.000000","date":"2026-04-10","gregorian_date":"Friday, 10 April 2026","arabic_date":"\u0627\u0644\u062c\u0645\u0639\u0629\u060c 10 \u0623\u0628\u0631\u064a\u0644 2026","day":"Friday","arabic_day":"\u0627\u0644\u062c\u0645\u0639\u0629"},
+    {"mosque":"makkah","prayer":"Jumuah","rakah":2,"surah_name":"Al-Asr","surah":103,"ayah_start":1,"ayah_end":3,"confidence":0.95,"timestamp":"2026-04-10T09:47:00.000000","date":"2026-04-10","gregorian_date":"Friday, 10 April 2026","arabic_date":"\u0627\u0644\u062c\u0645\u0639\u0629\u060c 10 \u0623\u0628\u0631\u064a\u0644 2026","day":"Friday","arabic_day":"\u0627\u0644\u062c\u0645\u0639\u0629"},
+    {"mosque":"madinah","prayer":"Jumuah","rakah":1,"surah_name":"Al-Ala","surah":87,"ayah_start":1,"ayah_end":19,"confidence":0.95,"timestamp":"2026-04-10T09:44:00.000000","date":"2026-04-10","gregorian_date":"Friday, 10 April 2026","arabic_date":"\u0627\u0644\u062c\u0645\u0639\u0629\u060c 10 \u0623\u0628\u0631\u064a\u0644 2026","day":"Friday","arabic_day":"\u0627\u0644\u062c\u0645\u0639\u0629"},
+    {"mosque":"madinah","prayer":"Jumuah","rakah":2,"surah_name":"Al-Ghashiyah","surah":88,"ayah_start":1,"ayah_end":26,"confidence":0.95,"timestamp":"2026-04-10T09:47:00.000000","date":"2026-04-10","gregorian_date":"Friday, 10 April 2026","arabic_date":"\u0627\u0644\u062c\u0645\u0639\u0629\u060c 10 \u0623\u0628\u0631\u064a\u0644 2026","day":"Friday","arabic_day":"\u0627\u0644\u062c\u0645\u0639\u0629"}
+]
+
+r = requests.post(API + "/seed", json={"entries": entries})
+print(f"Seeded: {r.json()}")
