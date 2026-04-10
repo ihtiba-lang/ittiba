@@ -39,3 +39,4 @@ entries = [
 
 r = requests.post(API + "/seed", json={"entries": entries})
 print(f"Seeded: {r.json()}")
+# This script is auto-updated — always run after API redeploy
