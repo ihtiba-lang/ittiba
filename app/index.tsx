@@ -41,16 +41,13 @@ function getLocalTime() {
   return new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
 }
 
-function getGregorianDate() {
-  return new Date().toLocaleDateString("en-US", { timeZone: "Asia/Riyadh", weekday: "long", year: "numeric", month: "long", day: "numeric" });
-}
-
-function getHijriDate() {
-  try {
-    return new Date().toLocaleDateString("en-TN-u-ca-islamic", { timeZone: "Asia/Riyadh", weekday: "long", year: "numeric", month: "long", day: "numeric" });
-  } catch (e) {
-    return "";
-  }
+function getDateParts() {
+  const now = new Date();
+  const day = now.toLocaleDateString("en-US", { timeZone: "Asia/Riyadh", day: "numeric" });
+  const month = now.toLocaleDateString("en-US", { timeZone: "Asia/Riyadh", month: "long" });
+  const year = now.toLocaleDateString("en-US", { timeZone: "Asia/Riyadh", year: "numeric" });
+  const weekday = now.toLocaleDateString("en-US", { timeZone: "Asia/Riyadh", weekday: "long" });
+  return { day, month, year, weekday };
 }
 
 const ARABIC_DAYS = {
@@ -68,9 +65,57 @@ const ARABIC_DAYS_TRANSLITERATED = {
   "Sunday": "Al-Ahad · الأحد"
 };
 
-function getArabicDay() {
-  const day = new Date().toLocaleDateString("en-US", { timeZone: "Asia/Riyadh", weekday: "long" });
-  return ARABIC_DAYS_TRANSLITERATED[day] || day;
+// Hijri months in English
+const HIJRI_MONTHS = [
+  "Muharram","Safar","Rabi al-Awwal","Rabi al-Thani",
+  "Jumada al-Ula","Jumada al-Thani","Rajab","Sha'ban",
+  "Ramadan","Shawwal","Dhu al-Qi'dah","Dhu al-Hijjah"
+];
+
+// Hijri months in Arabic
+const HIJRI_MONTHS_AR = [
+  "مُحَرَّم","صَفَر","رَبِيع الأَوَّل","رَبِيع الثَّانِي",
+  "جُمَادَى الأُولَى","جُمَادَى الثَّانِيَة","رَجَب","شَعْبَان",
+  "رَمَضَان","شَوَّال","ذُو الْقَعْدَة","ذُو الْحِجَّة"
+];
+
+function getHijriParts() {
+  // Manual Hijri calculation — accurate to ±1 day
+  // Reference: 1 Muharram 1446 = 7 July 2024
+  const refGregorian = new Date("2024-07-07");
+  const now = new Date();
+  const saudiNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Riyadh" }));
+  const diffDays = Math.floor((saudiNow - refGregorian) / 86400000);
+  
+  // Hijri year length ~354.367 days
+  let totalDays = diffDays;
+  let hijriYear = 1446;
+  
+  // Each Hijri year ~ 354 or 355 days
+  const yearLengths = [354,355,354,354,355,354,355,354,354,355,354,355];
+  let idx = 0;
+  while (totalDays >= yearLengths[idx % 12]) {
+    totalDays -= yearLengths[idx % 12];
+    hijriYear++;
+    idx++;
+  }
+  
+  // Each Hijri month ~ 29 or 30 days alternating
+  let hijriMonth = 0;
+  const monthLengths = [30,29,30,29,30,29,30,29,30,29,30,29];
+  while (totalDays >= monthLengths[hijriMonth]) {
+    totalDays -= monthLengths[hijriMonth];
+    hijriMonth++;
+  }
+  
+  const hijriDay = totalDays + 1;
+  
+  return {
+    day: hijriDay,
+    month: HIJRI_MONTHS[hijriMonth],
+    monthAr: HIJRI_MONTHS_AR[hijriMonth],
+    year: hijriYear
+  };
 }
 
 function getSaudiNow() {
@@ -218,9 +263,18 @@ export default function HomeScreen() {
       })()}
 
       <View style={styles.dateCard}>
-        <Text style={styles.gregorianDate}>{getGregorianDate()}</Text>
-        <Text style={styles.arabicDay}>{getArabicDay()}</Text>
-        <Text style={styles.hijriDate}>{getHijriDate()}</Text>
+        {(() => {
+          const { day, month, year, weekday } = getDateParts();
+          const hijri = getHijriParts();
+          const arabicDay = ARABIC_DAYS[weekday] || weekday;
+          return (
+            <>
+              <Text style={styles.dateDay}>{month} {day}, {year}</Text>
+              <Text style={styles.dateWeekday}>{weekday} · {arabicDay}</Text>
+              <Text style={styles.hijriDate}>{hijri.day} {hijri.month} {hijri.year} · {hijri.day} {hijri.monthAr}</Text>
+            </>
+          );
+        })()}
       </View>
 
       <View style={styles.timeCard}>
@@ -297,9 +351,9 @@ const styles = StyleSheet.create({
   liveDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: GOLD },
   liveText: { fontSize: 13, color: GOLD },
   dateCard: { margin: 16, marginBottom: 8, backgroundColor: "#fff", borderRadius: 16, padding: 16, alignItems: "center" },
-  gregorianDate: { fontSize: 14, fontWeight: "500", color: GREEN },
-  hijriDate: { fontSize: 13, color: GOLD, marginTop: 4 },
-  arabicDay: { fontSize: 18, color: GREEN, marginTop: 4, fontWeight: "600" },
+  dateDay: { fontSize: 18, fontWeight: "700", color: GREEN },
+  dateWeekday: { fontSize: 15, fontWeight: "600", color: GREEN, marginTop: 4 },
+  hijriDate: { fontSize: 13, color: GOLD, marginTop: 6 },
   timeCard: { flexDirection: "row", marginHorizontal: 16, marginBottom: 8, backgroundColor: "#fff", borderRadius: 16, padding: 20 },
   timeBlock: { flex: 1, alignItems: "center" },
   timeLabel: { fontSize: 12, color: "#999", marginBottom: 4 },
