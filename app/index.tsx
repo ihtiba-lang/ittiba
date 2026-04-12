@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator, RefreshControl, ScrollView, TouchableOpacity } from "react-native";
 import * as Notifications from "expo-notifications";
@@ -5,6 +6,86 @@ import * as Device from "expo-device";
 import { SURAH_ARABIC } from "../constants/surahArabic";
 import * as Location from "expo-location";
 import { Magnetometer } from "expo-sensors";
+
+const HIJRI_LOOKUP = {
+  "2026-04-11":"23 Shawwal 1447 · ٢٣ شوال ١٤٤٧",
+  "2026-04-12":"24 Shawwal 1447 · ٢٤ شوال ١٤٤٧",
+  "2026-04-13":"25 Shawwal 1447 · ٢٥ شوال ١٤٤٧",
+  "2026-04-14":"26 Shawwal 1447 · ٢٦ شوال ١٤٤٧",
+  "2026-04-15":"27 Shawwal 1447 · ٢٧ شوال ١٤٤٧",
+  "2026-04-16":"28 Shawwal 1447 · ٢٨ شوال ١٤٤٧",
+  "2026-04-17":"29 Shawwal 1447 · ٢٩ شوال ١٤٤٧",
+  "2026-04-18":"30 Shawwal 1447 · ٣٠ شوال ١٤٤٧",
+  "2026-04-19":"1 Dhu al-Qidah 1447 · ١ ذو القعدة ١٤٤٧",
+  "2026-04-20":"2 Dhu al-Qidah 1447 · ٢ ذو القعدة ١٤٤٧",
+  "2026-04-21":"3 Dhu al-Qidah 1447 · ٣ ذو القعدة ١٤٤٧",
+  "2026-04-22":"4 Dhu al-Qidah 1447 · ٤ ذو القعدة ١٤٤٧",
+  "2026-04-23":"5 Dhu al-Qidah 1447 · ٥ ذو القعدة ١٤٤٧",
+  "2026-04-24":"6 Dhu al-Qidah 1447 · ٦ ذو القعدة ١٤٤٧",
+  "2026-04-25":"7 Dhu al-Qidah 1447 · ٧ ذو القعدة ١٤٤٧",
+  "2026-04-26":"8 Dhu al-Qidah 1447 · ٨ ذو القعدة ١٤٤٧",
+  "2026-04-27":"9 Dhu al-Qidah 1447 · ٩ ذو القعدة ١٤٤٧",
+  "2026-04-28":"10 Dhu al-Qidah 1447 · ١٠ ذو القعدة ١٤٤٧",
+  "2026-04-29":"11 Dhu al-Qidah 1447 · ١١ ذو القعدة ١٤٤٧",
+  "2026-04-30":"12 Dhu al-Qidah 1447 · ١٢ ذو القعدة ١٤٤٧",
+  "2026-05-01":"13 Dhu al-Qidah 1447 · ١٣ ذو القعدة ١٤٤٧",
+  "2026-05-02":"14 Dhu al-Qidah 1447 · ١٤ ذو القعدة ١٤٤٧",
+  "2026-05-03":"15 Dhu al-Qidah 1447 · ١٥ ذو القعدة ١٤٤٧",
+  "2026-05-04":"16 Dhu al-Qidah 1447 · ١٦ ذو القعدة ١٤٤٧",
+  "2026-05-05":"17 Dhu al-Qidah 1447 · ١٧ ذو القعدة ١٤٤٧",
+  "2026-05-06":"18 Dhu al-Qidah 1447 · ١٨ ذو القعدة ١٤٤٧",
+  "2026-05-07":"19 Dhu al-Qidah 1447 · ١٩ ذو القعدة ١٤٤٧",
+  "2026-05-08":"20 Dhu al-Qidah 1447 · ٢٠ ذو القعدة ١٤٤٧",
+  "2026-05-09":"21 Dhu al-Qidah 1447 · ٢١ ذو القعدة ١٤٤٧",
+  "2026-05-10":"22 Dhu al-Qidah 1447 · ٢٢ ذو القعدة ١٤٤٧",
+  "2026-05-11":"23 Dhu al-Qidah 1447 · ٢٣ ذو القعدة ١٤٤٧",
+  "2026-05-12":"24 Dhu al-Qidah 1447 · ٢٤ ذو القعدة ١٤٤٧",
+  "2026-05-13":"25 Dhu al-Qidah 1447 · ٢٥ ذو القعدة ١٤٤٧",
+  "2026-05-14":"26 Dhu al-Qidah 1447 · ٢٦ ذو القعدة ١٤٤٧",
+  "2026-05-15":"27 Dhu al-Qidah 1447 · ٢٧ ذو القعدة ١٤٤٧",
+  "2026-05-16":"28 Dhu al-Qidah 1447 · ٢٨ ذو القعدة ١٤٤٧",
+  "2026-05-17":"29 Dhu al-Qidah 1447 · ٢٩ ذو القعدة ١٤٤٧",
+  "2026-05-18":"30 Dhu al-Qidah 1447 · ٣٠ ذو القعدة ١٤٤٧",
+  "2026-05-19":"1 Dhu al-Hijjah 1447 · ١ ذو الحجة ١٤٤٧",
+  "2026-05-20":"2 Dhu al-Hijjah 1447 · ٢ ذو الحجة ١٤٤٧",
+  "2026-05-21":"3 Dhu al-Hijjah 1447 · ٣ ذو الحجة ١٤٤٧",
+  "2026-05-22":"4 Dhu al-Hijjah 1447 · ٤ ذو الحجة ١٤٤٧",
+  "2026-05-23":"5 Dhu al-Hijjah 1447 · ٥ ذو الحجة ١٤٤٧",
+  "2026-05-24":"6 Dhu al-Hijjah 1447 · ٦ ذو الحجة ١٤٤٧",
+  "2026-05-25":"7 Dhu al-Hijjah 1447 · ٧ ذو الحجة ١٤٤٧",
+  "2026-05-26":"8 Dhu al-Hijjah 1447 · ٨ ذو الحجة ١٤٤٧",
+  "2026-05-27":"9 Dhu al-Hijjah 1447 · ٩ ذو الحجة ١٤٤٧",
+  "2026-05-28":"10 Dhu al-Hijjah 1447 · ١٠ ذو الحجة ١٤٤٧",
+  "2026-05-29":"11 Dhu al-Hijjah 1447 · ١١ ذو الحجة ١٤٤٧",
+  "2026-05-30":"12 Dhu al-Hijjah 1447 · ١٢ ذو الحجة ١٤٤٧",
+  "2026-05-31":"13 Dhu al-Hijjah 1447 · ١٣ ذو الحجة ١٤٤٧",
+  "2026-06-01":"14 Dhu al-Hijjah 1447 · ١٤ ذو الحجة ١٤٤٧",
+  "2026-06-02":"15 Dhu al-Hijjah 1447 · ١٥ ذو الحجة ١٤٤٧",
+  "2026-06-03":"16 Dhu al-Hijjah 1447 · ١٦ ذو الحجة ١٤٤٧",
+  "2026-06-04":"17 Dhu al-Hijjah 1447 · ١٧ ذو الحجة ١٤٤٧",
+  "2026-06-05":"18 Dhu al-Hijjah 1447 · ١٨ ذو الحجة ١٤٤٧",
+  "2026-06-06":"19 Dhu al-Hijjah 1447 · ١٩ ذو الحجة ١٤٤٧",
+  "2026-06-07":"20 Dhu al-Hijjah 1447 · ٢٠ ذو الحجة ١٤٤٧",
+  "2026-06-08":"21 Dhu al-Hijjah 1447 · ٢١ ذو الحجة ١٤٤٧",
+  "2026-06-09":"22 Dhu al-Hijjah 1447 · ٢٢ ذو الحجة ١٤٤٧",
+  "2026-06-10":"23 Dhu al-Hijjah 1447 · ٢٣ ذو الحجة ١٤٤٧",
+  "2026-06-11":"24 Dhu al-Hijjah 1447 · ٢٤ ذو الحجة ١٤٤٧",
+  "2026-06-12":"25 Dhu al-Hijjah 1447 · ٢٥ ذو الحجة ١٤٤٧",
+  "2026-06-13":"26 Dhu al-Hijjah 1447 · ٢٦ ذو الحجة ١٤٤٧",
+  "2026-06-14":"27 Dhu al-Hijjah 1447 · ٢٧ ذو الحجة ١٤٤٧",
+  "2026-06-15":"28 Dhu al-Hijjah 1447 · ٢٨ ذو الحجة ١٤٤٧",
+  "2026-06-16":"29 Dhu al-Hijjah 1447 · ٢٩ ذو الحجة ١٤٤٧",
+  "2026-06-17":"1 Muharram 1448 · ١ محرم ١٤٤٨",
+};
+
+function getHijriString() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return HIJRI_LOOKUP[y + "-" + m + "-" + d] || "";
+}
+
 
 const API = "https://ittiba-ittiba.hf.space";
 const PROJECT_ID = "a6c00a10-7005-4bdf-a2c6-83cc49f20490";
@@ -65,58 +146,11 @@ const ARABIC_DAYS_TRANSLITERATED = {
   "Sunday": "Al-Ahad · الأحد"
 };
 
-// Hijri months in English
-const HIJRI_MONTHS = [
-  "Muharram","Safar","Rabi al-Awwal","Rabi al-Thani",
-  "Jumada al-Ula","Jumada al-Thani","Rajab","Sha'ban",
-  "Ramadan","Shawwal","Dhu al-Qi'dah","Dhu al-Hijjah"
-];
 
-// Hijri months in Arabic
-const HIJRI_MONTHS_AR = [
-  "مُحَرَّم","صَفَر","رَبِيع الأَوَّل","رَبِيع الثَّانِي",
-  "جُمَادَى الأُولَى","جُمَادَى الثَّانِيَة","رَجَب","شَعْبَان",
-  "رَمَضَان","شَوَّال","ذُو الْقَعْدَة","ذُو الْحِجَّة"
-];
 
-function getHijriParts() {
-  // Manual Hijri calculation — accurate to ±1 day
-  // Reference: 1 Muharram 1446 = 7 July 2024
-  const refGregorian = new Date("2024-07-07");
-  const now = new Date();
-  const saudiNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Riyadh" }));
-  const diffDays = Math.floor((saudiNow - refGregorian) / 86400000);
-  
-  // Hijri year length ~354.367 days
-  let totalDays = diffDays;
-  let hijriYear = 1446;
-  
-  // Each Hijri year ~ 354 or 355 days
-  const yearLengths = [354,355,354,354,355,354,355,354,354,355,354,355];
-  let idx = 0;
-  while (totalDays >= yearLengths[idx % 12]) {
-    totalDays -= yearLengths[idx % 12];
-    hijriYear++;
-    idx++;
-  }
-  
-  // Each Hijri month ~ 29 or 30 days alternating
-  let hijriMonth = 0;
-  const monthLengths = [30,29,30,29,30,29,30,29,30,29,30,29];
-  while (totalDays >= monthLengths[hijriMonth]) {
-    totalDays -= monthLengths[hijriMonth];
-    hijriMonth++;
-  }
-  
-  const hijriDay = totalDays + 1;
-  
-  return {
-    day: hijriDay,
-    month: HIJRI_MONTHS[hijriMonth],
-    monthAr: HIJRI_MONTHS_AR[hijriMonth],
-    year: hijriYear
-  };
-}
+
+
+
 
 function getSaudiNow() {
   const now = new Date();
@@ -167,7 +201,6 @@ export default function HomeScreen() {
   const [, setTick] = useState(0);
   const [qiblaAngle, setQiblaAngle] = useState(null);
   const [heading, setHeading] = useState(0);
-  const [locationName, setLocationName] = useState("Locating...");
 
   const fetchData = async () => {
     try {
@@ -265,13 +298,12 @@ export default function HomeScreen() {
       <View style={styles.dateCard}>
         {(() => {
           const { day, month, year, weekday } = getDateParts();
-          const hijri = getHijriParts();
           const arabicDay = ARABIC_DAYS[weekday] || weekday;
           return (
             <>
               <Text style={styles.dateDay}>{month} {day}, {year}</Text>
               <Text style={styles.dateWeekday}>{weekday} · {arabicDay}</Text>
-              <Text style={styles.hijriDate}>{hijri.day} {hijri.month} {hijri.year} · {hijri.day} {hijri.monthAr}</Text>
+              <Text style={styles.hijriDate}>{getHijriString()}</Text>
             </>
           );
         })()}

@@ -7,6 +7,81 @@ const GOLD = "#C9A84C";
 const GREEN = "#0A3D2B";
 const GREEN_LIGHT = "#1D9E75";
 
+const HIJRI_LOOKUP: Record<string, string> = {
+  "2026-04-11":"23 Shawwal 1447 · ٢٣ شوال ١٤٤٧",
+  "2026-04-12":"24 Shawwal 1447 · ٢٤ شوال ١٤٤٧",
+  "2026-04-13":"25 Shawwal 1447 · ٢٥ شوال ١٤٤٧",
+  "2026-04-14":"26 Shawwal 1447 · ٢٦ شوال ١٤٤٧",
+  "2026-04-15":"27 Shawwal 1447 · ٢٧ شوال ١٤٤٧",
+  "2026-04-16":"28 Shawwal 1447 · ٢٨ شوال ١٤٤٧",
+  "2026-04-17":"29 Shawwal 1447 · ٢٩ شوال ١٤٤٧",
+  "2026-04-18":"30 Shawwal 1447 · ٣٠ شوال ١٤٤٧",
+  "2026-04-19":"1 Dhu al-Qidah 1447 · ١ ذو القعدة ١٤٤٧",
+  "2026-04-20":"2 Dhu al-Qidah 1447 · ٢ ذو القعدة ١٤٤٧",
+  "2026-04-21":"3 Dhu al-Qidah 1447 · ٣ ذو القعدة ١٤٤٧",
+  "2026-04-22":"4 Dhu al-Qidah 1447 · ٤ ذو القعدة ١٤٤٧",
+  "2026-04-23":"5 Dhu al-Qidah 1447 · ٥ ذو القعدة ١٤٤٧",
+  "2026-04-24":"6 Dhu al-Qidah 1447 · ٦ ذو القعدة ١٤٤٧",
+  "2026-04-25":"7 Dhu al-Qidah 1447 · ٧ ذو القعدة ١٤٤٧",
+  "2026-04-26":"8 Dhu al-Qidah 1447 · ٨ ذو القعدة ١٤٤٧",
+  "2026-04-27":"9 Dhu al-Qidah 1447 · ٩ ذو القعدة ١٤٤٧",
+  "2026-04-28":"10 Dhu al-Qidah 1447 · ١٠ ذو القعدة ١٤٤٧",
+  "2026-04-29":"11 Dhu al-Qidah 1447 · ١١ ذو القعدة ١٤٤٧",
+  "2026-04-30":"12 Dhu al-Qidah 1447 · ١٢ ذو القعدة ١٤٤٧",
+  "2026-05-01":"13 Dhu al-Qidah 1447 · ١٣ ذو القعدة ١٤٤٧",
+  "2026-05-02":"14 Dhu al-Qidah 1447 · ١٤ ذو القعدة ١٤٤٧",
+  "2026-05-03":"15 Dhu al-Qidah 1447 · ١٥ ذو القعدة ١٤٤٧",
+  "2026-05-04":"16 Dhu al-Qidah 1447 · ١٦ ذو القعدة ١٤٤٧",
+  "2026-05-05":"17 Dhu al-Qidah 1447 · ١٧ ذو القعدة ١٤٤٧",
+  "2026-05-06":"18 Dhu al-Qidah 1447 · ١٨ ذو القعدة ١٤٤٧",
+  "2026-05-07":"19 Dhu al-Qidah 1447 · ١٩ ذو القعدة ١٤٤٧",
+  "2026-05-08":"20 Dhu al-Qidah 1447 · ٢٠ ذو القعدة ١٤٤٧",
+  "2026-05-09":"21 Dhu al-Qidah 1447 · ٢١ ذو القعدة ١٤٤٧",
+  "2026-05-10":"22 Dhu al-Qidah 1447 · ٢٢ ذو القعدة ١٤٤٧",
+  "2026-05-11":"23 Dhu al-Qidah 1447 · ٢٣ ذو القعدة ١٤٤٧",
+  "2026-05-12":"24 Dhu al-Qidah 1447 · ٢٤ ذو القعدة ١٤٤٧",
+  "2026-05-13":"25 Dhu al-Qidah 1447 · ٢٥ ذو القعدة ١٤٤٧",
+  "2026-05-14":"26 Dhu al-Qidah 1447 · ٢٦ ذو القعدة ١٤٤٧",
+  "2026-05-15":"27 Dhu al-Qidah 1447 · ٢٧ ذو القعدة ١٤٤٧",
+  "2026-05-16":"28 Dhu al-Qidah 1447 · ٢٨ ذو القعدة ١٤٤٧",
+  "2026-05-17":"29 Dhu al-Qidah 1447 · ٢٩ ذو القعدة ١٤٤٧",
+  "2026-05-18":"30 Dhu al-Qidah 1447 · ٣٠ ذو القعدة ١٤٤٧",
+  "2026-05-19":"1 Dhu al-Hijjah 1447 · ١ ذو الحجة ١٤٤٧",
+  "2026-05-20":"2 Dhu al-Hijjah 1447 · ٢ ذو الحجة ١٤٤٧",
+  "2026-05-21":"3 Dhu al-Hijjah 1447 · ٣ ذو الحجة ١٤٤٧",
+  "2026-05-22":"4 Dhu al-Hijjah 1447 · ٤ ذو الحجة ١٤٤٧",
+  "2026-05-23":"5 Dhu al-Hijjah 1447 · ٥ ذو الحجة ١٤٤٧",
+  "2026-05-24":"6 Dhu al-Hijjah 1447 · ٦ ذو الحجة ١٤٤٧",
+  "2026-05-25":"7 Dhu al-Hijjah 1447 · ٧ ذو الحجة ١٤٤٧",
+  "2026-05-26":"8 Dhu al-Hijjah 1447 · ٨ ذو الحجة ١٤٤٧",
+  "2026-05-27":"9 Dhu al-Hijjah 1447 · ٩ ذو الحجة ١٤٤٧",
+  "2026-05-28":"10 Dhu al-Hijjah 1447 · ١٠ ذو الحجة ١٤٤٧",
+  "2026-05-29":"11 Dhu al-Hijjah 1447 · ١١ ذو الحجة ١٤٤٧",
+  "2026-05-30":"12 Dhu al-Hijjah 1447 · ١٢ ذو الحجة ١٤٤٧",
+  "2026-05-31":"13 Dhu al-Hijjah 1447 · ١٣ ذو الحجة ١٤٤٧",
+  "2026-06-01":"14 Dhu al-Hijjah 1447 · ١٤ ذو الحجة ١٤٤٧",
+  "2026-06-02":"15 Dhu al-Hijjah 1447 · ١٥ ذو الحجة ١٤٤٧",
+  "2026-06-03":"16 Dhu al-Hijjah 1447 · ١٦ ذو الحجة ١٤٤٧",
+  "2026-06-04":"17 Dhu al-Hijjah 1447 · ١٧ ذو الحجة ١٤٤٧",
+  "2026-06-05":"18 Dhu al-Hijjah 1447 · ١٨ ذو الحجة ١٤٤٧",
+  "2026-06-06":"19 Dhu al-Hijjah 1447 · ١٩ ذو الحجة ١٤٤٧",
+  "2026-06-07":"20 Dhu al-Hijjah 1447 · ٢٠ ذو الحجة ١٤٤٧",
+  "2026-06-08":"21 Dhu al-Hijjah 1447 · ٢١ ذو الحجة ١٤٤٧",
+  "2026-06-09":"22 Dhu al-Hijjah 1447 · ٢٢ ذو الحجة ١٤٤٧",
+  "2026-06-10":"23 Dhu al-Hijjah 1447 · ٢٣ ذو الحجة ١٤٤٧",
+  "2026-06-11":"24 Dhu al-Hijjah 1447 · ٢٤ ذو الحجة ١٤٤٧",
+  "2026-06-12":"25 Dhu al-Hijjah 1447 · ٢٥ ذو الحجة ١٤٤٧",
+  "2026-06-13":"26 Dhu al-Hijjah 1447 · ٢٦ ذو الحجة ١٤٤٧",
+  "2026-06-14":"27 Dhu al-Hijjah 1447 · ٢٧ ذو الحجة ١٤٤٧",
+  "2026-06-15":"28 Dhu al-Hijjah 1447 · ٢٨ ذو الحجة ١٤٤٧",
+  "2026-06-16":"29 Dhu al-Hijjah 1447 · ٢٩ ذو الحجة ١٤٤٧",
+  "2026-06-17":"1 Muharram 1448 · ١ محرم ١٤٤٨",
+};
+
+function getHijriDate(dateStr: string): string {
+  return HIJRI_LOOKUP[dateStr] || "";
+}
+
 export default function HistoryScreen() {
   const [dateHistory, setDateHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -95,6 +170,7 @@ export default function HistoryScreen() {
                 <Text style={styles.dateHeaderArabic}>{selectedDay.arabic_day}</Text>
                 <Text style={styles.dateHeaderGregorian}>{selectedDay.gregorian}</Text>
                 <Text style={styles.dateHeaderArabicFull}>{selectedDay.arabic}</Text>
+                {getHijriDate(selectedDay.date) ? <Text style={styles.dateHeaderHijri}>{getHijriDate(selectedDay.date)}</Text> : null}
               </View>
 
               {filteredEntries.length === 0 ? (
@@ -146,6 +222,7 @@ const styles = StyleSheet.create({
   dateHeaderArabic: { fontSize: 22, fontWeight: "600", color: GREEN },
   dateHeaderGregorian: { fontSize: 13, color: "#999", marginTop: 4 },
   dateHeaderArabicFull: { fontSize: 14, color: GOLD, marginTop: 4 },
+  dateHeaderHijri: { fontSize: 13, color: "#999", marginTop: 4, fontStyle: "italic" },
   emptyCard: { margin: 16, backgroundColor: "#fff", borderRadius: 16, padding: 20, alignItems: "center" },
   emptyText: { fontSize: 16, color: "#333", marginBottom: 4 },
   emptySubText: { fontSize: 13, color: "#999", textAlign: "center" },
