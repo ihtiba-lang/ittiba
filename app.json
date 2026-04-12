@@ -9,11 +9,14 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.ittiba.ittibaapp",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      }
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSLocationWhenInUseUsageDescription": "Used to calculate your Qibla direction towards Makkah",
+        "NSLocationAlwaysUsageDescription": "Used to calculate your Qibla direction towards Makkah"
+      },
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +26,7 @@
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.ittiba.ittibaapp",
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "output": "static",
