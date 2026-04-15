@@ -241,7 +241,7 @@ export default function HomeScreen() {
     })();
     const magSub = Magnetometer.addListener(data => {
       const { x, y, z } = data;
-      let angle = Math.atan2(-y, x) * (180 / Math.PI);
+      let angle = Math.atan2(y, -x) * (180 / Math.PI);
       angle = (angle + 360) % 360;
       setHeading(angle);
     });
@@ -283,15 +283,16 @@ export default function HomeScreen() {
         return (
           <View style={styles.qiblaFloat}>
             <View style={[styles.qiblaCompassSmall, aligned && styles.qiblaCompassAligned]}>
-              {/* Rotating needle points to Qibla */}
+              {/* Rotating needle */}
               <View style={[styles.qiblaArrowSmall, { transform: [{ rotate: diff + "deg" }] }]}>
                 <View style={[styles.arrowHead, aligned && styles.arrowHeadAligned]} />
                 <View style={[styles.arrowBody, aligned && styles.arrowBodyAligned]} />
               </View>
-              {/* Kaaba icon in center */}
-              <View style={styles.kaabaCenter}>
+              {/* Kaaba fixed at top edge — does not rotate */}
+              <View style={styles.kaabaFixed}>
                 <Text style={styles.kaabaEmoji}>🕋</Text>
               </View>
+
             </View>
             <Text style={[styles.qiblaFloatText, aligned && styles.qiblaFloatTextAligned]}>
               {aligned ? "Qibla ✓" : "Qibla"}
@@ -419,8 +420,15 @@ const styles = StyleSheet.create({
   noDataSub: { fontSize: 13, color: "#999", textAlign: "center" },
   qiblaFloat: { position: "absolute", top: 62, right: 36, alignItems: "center", zIndex: 10 },
   qiblaCompassSmall: { width: 60, height: 60, borderRadius: 30, borderWidth: 2.5, borderColor: "#C9A84C", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(201,168,76,0.1)" },
-  kaabaCenter: { position: "absolute", alignItems: "center", justifyContent: "center" },
-  kaabaEmoji: { fontSize: 18 },
+  kaabaFixed: {
+    position: "absolute",
+    top: -14,
+    alignSelf: "center",
+    backgroundColor: "rgba(15,20,30,0.92)",
+    paddingHorizontal: 2,
+    zIndex: 10,
+  },
+  kaabaEmoji: { fontSize: 15 },
   qiblaCompassAligned: { borderColor: "#1D9E75", backgroundColor: "rgba(29,158,117,0.2)" },
   qiblaArrowSmall: { alignItems: "center", justifyContent: "center", width: 60, height: 60 },
   arrowHead: { width: 0, height: 0, borderLeftWidth: 7, borderRightWidth: 7, borderBottomWidth: 14, borderLeftColor: "transparent", borderRightColor: "transparent", borderBottomColor: "#C9A84C" },
