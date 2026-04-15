@@ -278,7 +278,7 @@ export default function HomeScreen() {
         </View>
       </View>
       {qiblaAngle !== null && (() => {
-        const diff = ((qiblaAngle - heading + 360) % 360);
+        const diff = ((qiblaAngle - heading + 180 + 360) % 360);
         const aligned = diff < 10 || diff > 350;
         return (
           <View style={styles.qiblaFloat}>
